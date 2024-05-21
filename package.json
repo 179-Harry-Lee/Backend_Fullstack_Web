@@ -1,0 +1,28 @@
+{
+  "name": "thuctap",
+  "version": "1.0.0",
+  "description": "backend nodes",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "fullstack",
+    "nodejs",
+    "express"
+  ],
+  "author": "Daniel Dung",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "dotenv": "^16.4.5",
+    "ejs": "^3.1.10",
+    "express": "^4.19.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.24.5",
+    "@babel/node": "^7.23.9",
+    "@babel/preset-env": "^7.24.5",
+    "nodemon": "^3.1.0"
+  }
+}
