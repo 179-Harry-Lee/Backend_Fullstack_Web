@@ -126,11 +126,6 @@ let getDetailDoctorById = (inputId) => {
               as: "positionData",
               attributes: ["valueEn", "valueVi"],
             },
-            // {
-            //   model: db.Allcode,
-            //   as: "genderData",
-            //   attributes: ["valueEn", "valueVi"],
-            // },
           ],
           raw: false,
           nest: true,
@@ -168,17 +163,12 @@ let bulkCreateSchedule = (data) => {
           raw: true,
         });
 
-        //Convert date
-        if (existing && existing.length > 0) {
-          existing = existing.map((item) => {
-            item.date = new Date(item.date).getTime();
-            return item;
-          });
-        }
+        console.log("existing:", existing);
+        console.log("schedule:", schedule);
 
         //Compare different
         let toCreate = _.differenceWith(schedule, existing, (a, b) => {
-          return a.timeType === b.timeType && a.date === b.date;
+          return a.timeType === b.timeType && +a.date === +b.date;
         });
         console.log("To create:", toCreate);
 
@@ -206,6 +196,15 @@ let getScheduleByDate = (doctorId, date) => {
       } else {
         let dataSchedule = await db.Schedule.findAll({
           where: { doctorId: doctorId, date: date },
+          include: [
+            {
+              model: db.Allcode,
+              as: "timeTypeData",
+              attributes: ["valueEn", "valueVi"],
+            },
+          ],
+          raw: false,
+          nest: true,
         });
         if (!dataSchedule) dataSchedule = [];
 
