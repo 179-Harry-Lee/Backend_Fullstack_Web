@@ -38,6 +38,11 @@ let initWebRoutes = (app) => {
     doctorController.getScheduleByDate
   );
 
+  router.get(
+    "/api/get-extra-infor-doctor-by-id",
+    doctorController.getExtraInforDoctorById
+  );
+
   return app.use("/", router);
 };
 
