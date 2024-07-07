@@ -1,4 +1,3 @@
-import { where } from "sequelize";
 import db from "../models/index";
 require("dotenv").config();
 import _ from "lodash";
