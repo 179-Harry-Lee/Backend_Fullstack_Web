@@ -243,14 +243,10 @@ let bulkCreateSchedule = (data) => {
           raw: true,
         });
 
-        console.log("existing:", existing);
-        console.log("schedule:", schedule);
-
         //Compare different
         let toCreate = _.differenceWith(schedule, existing, (a, b) => {
           return a.timeType === b.timeType && +a.date === +b.date;
         });
-        console.log("To create:", toCreate);
 
         //Create data
         if (toCreate && toCreate.length > 0) {
