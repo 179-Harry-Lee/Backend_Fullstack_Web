@@ -400,6 +400,42 @@ let getProfileDoctorById = (inputId) => {
     }
   });
 };
+
+let getListPatientForDoctor = (doctorId, date) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      if ((!doctorId, !date)) {
+        resolve({
+          errCode: 1,
+          errMessage: "Missing required parameter",
+        });
+      } else {
+        let data = await db.Booking.findAll({
+          where: { statusId: "S2", doctorId: doctorId, date: date },
+          include: [
+            {
+              model: db.User,
+              as: "patientData",
+              attributes: ["email", "firstName", "address", "gender"],
+              include: [
+                {
+                  model: db.Allcode,
+                  as: "genderData",
+                  attributes: ["valueEn", "valueVi"],
+                },
+              ],
+            },
+          ],
+          raw: false, //sequelize object
+          nest: true, // { trong {}}
+        });
+        resolve({ errCode: 0, data: data });
+      }
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
 module.exports = {
   getTopDoctorHome: getTopDoctorHome,
   getAllDoctors: getAllDoctors,
@@ -409,4 +445,5 @@ module.exports = {
   getScheduleByDate: getScheduleByDate,
   getExtraInforDoctorById: getExtraInforDoctorById,
   getProfileDoctorById: getProfileDoctorById,
+  getListPatientForDoctor: getListPatientForDoctor,
 };
