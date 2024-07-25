@@ -13,6 +13,12 @@ module.exports = (sequelize, DataTypes) => {
         targetKey: "id",
         as: "patientData",
       });
+
+      Booking.belongsTo(models.Allcode, {
+        foreignKey: "timeType",
+        targetKey: "keyMap",
+        as: "timeTypeDataPatient",
+      });
     }
   }
   Booking.init(
