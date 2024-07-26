@@ -58,6 +58,73 @@ let getBodyHTMLemail = (dataSend) => {
   return result;
 };
 
+let sendAttachment = (dataSend) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let transporter = nodemailer.createTransport({
+        host: "smtp.gmail.com",
+        port: 587,
+        secure: false, // Use `true` for port 465, `false` for all other ports
+        auth: {
+          user: process.env.EMAIL_APP,
+          pass: process.env.EMAIL_APP_PASSWORD,
+        },
+      });
+      let info = await transporter.sendMail({
+        from: '"Lê Nguyễn Đức Dũng 👻" <ducdung17903@gmail.com>', // sender address
+        to: dataSend.email, // list of receivers
+        subject: "Kết quả đặt lịch khám bệnh ✔", // Subject line
+        html: getBodyHTMLEmailRemedy(dataSend),
+        attachments: [
+          {
+            filename: `remedy-#${
+              dataSend.patientId
+            }-${new Date().getTime()}.png`,
+            content: dataSend.imgBase64.split("base64")[1],
+            encoding: "base64",
+          },
+        ],
+      });
+      resolve();
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
+let getBodyHTMLEmailRemedy = (dataSend) => {
+  let result = "";
+  if (dataSend.language === "vi") {
+    result = `<h3>Xin chào ${dataSend.patientName}</h3>
+            <p>Bạn nhận được email này vì đã đặt lịch khám bênh online trên Chamsocsuckhoe</p>
+            <p>Thông tin đơn thuốc được gửi trong file điính kèm</p>
+            
+
+            <p>Đây là email tự động. Vui lòng không trả lời lại</p>
+            
+
+         
+           
+
+            <div>Xin chân thành cảm ơn</div>
+    `;
+  }
+  if (dataSend.language === "en") {
+    result = `<h3>Hello ${dataSend.patientName}</h3>
+            <p>You have this mail because you booking an online medical appoint on the website Chamsocsuckhoe</p>
+            <p>Information to schedule an appointment</p>
+            
+
+            <p>This is a automation mail , please don't response this mail</p>
+      
+
+            <div>Thank you very for you spend the time to read this mail </div>
+    `;
+  }
+  return result;
+};
+
 module.exports = {
   sendSimpleEmail,
+  sendAttachment,
 };
