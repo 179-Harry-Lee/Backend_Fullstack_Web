@@ -1,0 +1,987 @@
+openapi: 3.0.3
+info:
+  title: Chăm sóc sức khỏe
+  description: |-
+    - Đề tài được phát triển nhằm mục tiêu giúp người bệnh có thể dễ dàng hơn trong việc đặt lịch khám bệnh , cũng như giúp các bệnh viện có thể dàng hơn được biết đến thông qua mạng xã hội 
+    - Link Github:
+    - [Front-end](https://github.com/179-Harry-Lee/Frontend_Fullstack_Web.git)
+    - [Back-end]( https://github.com/179-Harry-Lee/Backend_Fullstack_Web.git)
+  termsOfService: http://swagger.io/terms/
+  contact:
+    email: apiteam@swagger.io
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.11
+externalDocs:
+  description: Find out more about Swagger
+  url: http://swagger.io
+servers:
+  - url: http://localhost:8080
+tags:
+  - name: users
+    description: Các API liên quan đến user
+  
+  - name: doctor
+    description: Các API liên quan đến doctor
+
+
+paths:
+  /api/login:
+    post:
+      tags:
+        - users
+      summary: Đăng nhập
+      description: Đăng nhập
+      operationId: login
+      requestBody:
+        description: Thông tin đăng nhập
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/LoginBody" 
+        required: true
+      responses:
+        '200':
+          description: Đăng nhập thành công
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errCode: 
+                    type: integer
+                    example: 0
+                  message: 
+                    type: string
+                    example: OK
+                  user:
+                    type: object
+                    properties:
+                      email:
+                        type: string
+                        example: dung@gmail.com
+                      roleId:
+                        type: string
+                        example: 3  
+        '500':
+          description: Missing inputs parameter
+      security:
+        - petstore_auth:
+            - write:pets
+            - read:pets
+
+  /api/create-new-user:
+    post:
+      tags:
+        - users
+      summary: Đăng ký
+      description: Đăng ký
+      operationId: Create-new-user
+      requestBody:
+        description: Tạo người dùng
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/RegisterBody" 
+        required: true
+      responses:
+        '200':
+          description: Đăng ký thành công
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errCode: 
+                    type: integer
+                    example: 0
+                  message: 
+                    type: string
+                    example: OK 
+        '500':
+          description: Missing inputs parameter
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errCode: 
+                    type: integer
+                    example: 1
+                  message: 
+                    type: string
+                    example: Your email is already in use, please try another email!!
+      security:
+        - petstore_auth:
+            - write:pets
+            - read:pets
+  
+  /api/get-all-users:
+    get:
+      tags:
+        - users
+      summary: Lấy danh sách tất cả/1 người dùng
+      description: Lấy tất cả người dùng
+      operationId: get-all-users
+      parameters:
+        - name: id
+          in: query
+          description: truyền id là ALL để lấy tất cả user hoặc Id cụ thể để lấy user cụ thể
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: ALL
+      responses:
+        '200':
+          description: Xuất danh sách user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errCode: 
+                    type: integer
+                    example: 0
+                  message: 
+                    type: string
+                    example: OK
+                  user:
+                    type: array
+                    items:
+                    $ref: "#/components/schemas/UserData"
+                    
+                      
+
+        '500':
+          description: Missing inputs parameter
+      security:
+        - petstore_auth:
+            - write:pets
+            - read:pets
+
+  /api/edit-user:
+    put:
+      tags:
+        - users
+      summary: Cập nhật thông tin người dùng
+      description: Cập nhật
+      operationId: Edit-user
+      requestBody:
+        description: Cập nhật người dùng người dùng
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/EditUserData" 
+        required: true
+      responses:
+        '200':
+          description: Cập nhật thành công thành công
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errCode: 
+                    type: integer
+                    example: 0
+                  message: 
+                    type: string
+                    example: Update user success
+        '500':
+          description: Không tìm thấy user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errCode: 
+                    type: integer
+                    example: 1
+                  message: 
+                    type: string
+                    example: User not found
+      security:
+        - petstore_auth:
+            - write:pets
+            - read:pets
+
+  /api/delete-user:
+    delete:
+      tags:
+        - users
+      summary: Xóa người dùng
+      description: Xóa người dùng
+      operationId: delete-user
+      requestBody:
+        description: Xóa người dùng
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/DeleteUser" 
+        required: true
+      responses:
+        '200':
+          description: Xóa thành công
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errCode: 
+                    type: integer
+                    example: 0
+                  message: 
+                    type: string
+                    example: User has delete
+                    
+                      
+
+        '500':
+          description: User isn't exist
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errCode: 
+                    type: integer
+                    example: 2
+                  message: 
+                    type: string
+                    example: User has delete
+      security:
+        - petstore_auth:
+            - write:pets
+            - read:pets
+
+
+
+  
+  /api/top-doctor-home:
+    get:
+      tags:
+        - doctor
+      summary: Lấy danh sách bác sĩ nổi bật
+      description: Lấy tất cả bác sĩ nổi bật
+      operationId: top-doctor-home
+      
+      responses:
+        '200':
+          description: Xuất danh sách bác sĩ nổi bật
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errCode: 
+                    type: integer
+                    example: 0
+                  message: 
+                    type: string
+                    example: OK
+                  user:
+                    type: array
+                    items:
+                    $ref: "#/components/schemas/ListTopDocTor"
+                    
+                      
+
+        '500':
+          description: Missing inputs parameter
+      security:
+        - petstore_auth:
+            - write:pets
+            - read:pets
+
+  /api/get-all-doctors:
+    get:
+      tags:
+        - doctor
+      summary: Lấy danh sách tất cả bác sĩ
+      description: Lấy tất cả bác sĩ
+      operationId: get-all-doctor
+      
+      responses:
+        '200':
+          description: Xuất danh sách user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errCode: 
+                    type: integer
+                    example: 0
+                  message: 
+                    type: string
+                    example: OK
+                  user:
+                    type: array
+                    items:
+                    $ref: "#/components/schemas/GetAllDoctor"
+                    
+                      
+
+        '500':
+          description: Missing inputs parameter
+      security:
+        - petstore_auth:
+            - write:pets
+            - read:pets
+
+  /api/get-detail-doctor-by-id:
+    get:
+      tags:
+        - doctor
+      summary: Lấy thông tin chi tiết của bác sĩ
+      description: Lấy thông tin chi tiết của bác 1 bác sĩ
+      operationId: get-detail-doctor-by-id
+      parameters:
+        - name: id
+          in: query
+          description: truyền  id cụ thể để lấy doctor cụ thể
+          required: false
+          explode: true
+          schema:
+            type: number
+            default: 32
+      responses:
+        '200':
+          description: Xuất danh sách user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errCode: 
+                    type: integer
+                    example: 0
+                  message: 
+                    type: string
+                    example: OK
+                  user:
+                    type: array
+                    items:
+                    $ref: "#/components/schemas/DetailDoctorById"
+                    
+                  
+        '500':
+          description: Missing inputs parameter
+      security:
+        - petstore_auth:
+            - write:pets
+            - read:pets
+
+  /api/save-info-doctors:
+    post:
+      tags:
+        - doctor
+      summary: Admin tạo hoặc sửa thông tin bác sĩ
+      description: Admin tạo hoặc sửa thông tin bác sĩ 
+      operationId: create or edit
+      requestBody:
+        description: Sửa trường action là CREATE nếu muốn tạo bác sĩ và EDIT nếu muốn sửa bác sĩ
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/CreateOrEditDoctor" 
+        required: true
+      responses:
+        '200':
+          description: Tạo bác sĩ thành công
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errCode: 
+                    type: integer
+                    example: 0
+                  message: 
+                    type: string
+                    example: Save infor doctor success
+        '201':
+          description: Sửa thông tin thành công
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errCode: 
+                    type: integer
+                    example: 0
+                  message: 
+                    type: string
+                    example: Save infor doctor success
+        '500':
+          description: Missing inputs parameter
+      security:
+        - petstore_auth:
+            - write:pets
+            - read:pets
+
+  /api/get-schedule-doctor-by-date:
+    get:
+      tags:
+        - doctor
+      summary: Lấy thông tin lịch khám bệnh của bác sĩ cụ thể trong ngày 1 ngày
+      description: Lấy thông tin lịch khám của bác sĩ cụ thể trong ngày hôm đó
+      operationId: get-schedule-doctor-by-date
+      parameters:
+        - name: doctorId
+          in: query
+          description: truyền  id cụ thể để lấy doctor cụ thể
+          required: false
+          explode: true
+          schema:
+            type: number
+            default: 35
+        - name: date
+          in: query
+          description: truyền thời gian bằng kiểu unix vào đây
+          required: false
+          explode: true
+          schema:
+            type: number
+            default: 1721926800000
+      responses:
+        '200':
+          description: Xuất danh sách user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errCode: 
+                    type: integer
+                    example: 0
+                  message: 
+                    type: string
+                    example: OK
+                  user:
+                    type: array
+                    items:
+                    $ref: "#/components/schemas/ScheduleDoctorByDate"
+                    
+                  
+        '500':
+          description: Missing inputs parameter
+      security:
+        - petstore_auth:
+            - write:pets
+            - read:pets
+
+  /api/get-extra-infor-doctor-by-id:
+    get:
+      tags:
+        - doctor
+      summary: Lấy thêm thông tin chi tiết của bác sĩ
+      description: Lấy thông tin chi tiết của bác 1 bác sĩ(Giá,thanh toán,...)
+      operationId: get-extra-infor-doctor-by-id
+      parameters:
+        - name: id
+          in: query
+          description: truyền  id cụ thể để lấy doctor cụ thể
+          required: false
+          explode: true
+          schema:
+            type: number
+            default: 38
+      responses:
+        '200':
+          description: Xuất danh sách user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errCode: 
+                    type: integer
+                    example: 0
+                  message: 
+                    type: string
+                    example: OK
+                  user:
+                    type: array
+                    items:
+                    $ref: "#/components/schemas/ExtraDoctorById"
+                    
+                  
+        '500':
+          description: Missing inputs parameter
+      security:
+        - petstore_auth:
+            - write:pets
+            - read:pets
+
+components:
+  schemas:
+    LoginBody:
+      type: object
+      properties:
+        email:
+          type: string
+          example: dung@gmail.com
+        password:
+          type: string
+          example: 123
+
+    RegisterBody:
+      type: object
+      properties:
+        email:
+          type: string
+          
+        password:
+          type: string
+          
+        firstName:
+          type: string
+           
+        lastName:
+          type: string
+
+        address:
+          type: string
+        
+        phonenumber:
+          type: string
+
+        gender:
+          type: integer
+
+        roleId:
+          type: integer
+
+
+    UserData:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 6
+        email:
+          type: string
+          example: dung@gmail.com
+        firstName:
+          type: string
+          example: Nguyen
+        lastName:
+          type: string
+          example: Dung
+        address:
+          type: string  
+          example: 298, lk 4-5, phường Bình Hưng Hòa B, quận Bình Tân  
+        phonenumber:
+          type: string
+          example: 04646363464
+        gender:
+          type: boolean
+          example: 0
+        image:
+          type: string
+          example: null
+        roleId:
+          type: string
+          example: 3 
+        positionId:
+          type: string
+          example: null
+        createdAt:
+          type: string
+          example: 2024-05-30T00:12:34.000Z
+
+    EditUserData:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 6
+        firstName:
+          type: string
+          example: Nguyen
+        lastName:
+          type: string
+          example: Dung
+        address:
+          type: string  
+          example: 298, lk 4-5, phường Bình Hưng Hòa B, quận Bình Tân  
+
+    DeleteUser: 
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 7
+
+
+    ListTopDocTor: 
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 38
+        email:
+          type: string
+          example: dung223344@gmail.com
+        firstName:
+          type: string
+          example: Lee
+        lastName:
+          type: string
+          example: Di
+        address:
+          type: string  
+          example: HCM
+        phonenumber:
+          type: string
+          example: 123
+        gender:
+          type: string
+          example: M
+        image:
+          type: object
+          properties:
+            type:
+              type: string
+              example: Buffer
+            image:
+              type: array
+              
+        roleId:
+          type: string
+          example: R2 
+        positionId:
+          type: string
+          example: P0
+        createdAt:
+          type: string
+          example: 2024-06-21T09:36:388.000Z
+        updateAt:
+          type: string
+          example: 2024-06-21T09:36:388.000Z
+        positionData:
+          type: object
+          properties:
+            valueEn:
+              type: string
+              example: "None"
+            valueVi:
+              type: string
+              example: "Bác sĩ"
+        genderData:
+          type: object
+          properties:
+            valueEn:
+              type: string
+              example: "Male"
+            valueVi:
+              type: string
+              example: "Nam"
+
+    GetAllDoctor: 
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 5
+        email:
+          type: string
+          example: ddz@gmail.com
+        firstName:
+          type: string
+          example: Dung
+        lastName:
+          type: string
+          example: Lee
+        address:
+          type: string  
+          example: ffffere
+        phonenumber:
+          type: string
+          example: 2312312
+        gender:
+          type: string
+          example: F
+        roleId:
+          type: string
+          example: R2 
+        positionId:
+          type: string
+          example: P1
+        createdAt:
+          type: string
+          example: 2024-06-21T09:36:388.000Z
+        updateAt:
+          type: string
+          example: 2024-06-21T09:36:388.000Z
+        
+
+    CreateOrEditDoctor:
+      type: object
+      properties:
+        doctorId:
+          type: number
+          example: 60
+        contentHTML:
+          type: string
+          example: Hello world
+        contentMarkdown:
+          type: string
+          example: Hello world
+        action:
+          type: string
+          example: CREATE
+        selectedPrice:
+          type: string
+          example: PRI1
+        selectedPayment:
+          type: string
+          example: PAY3
+        selectedProvince:
+          type: string
+          example: PRO3
+        nameClinic:
+          type: string
+          example: Bệnh viện Từ Dũ
+        addressClinic:
+          type: string
+          example: HCM
+        note:
+          type: string
+          example: VIP
+        specialtyId:
+          type: number
+          example: 2
+        clinicId:
+          type: number
+          example: 3
+
+
+    DetailDoctorById:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 32
+        email:
+          type: string
+          example: DoctorBui@gmail.com
+        firstName:
+          type: string
+          example: Bui
+        lastName:
+          type: string
+          example: Le
+        address:
+          type: string  
+          example: HCM
+        phonenumber:
+          type: string
+          example: 312312
+        gender:
+          type: string
+          example: M
+        image:
+          type: string
+          example: data:image/jpeg;base64
+        roleId:
+          type: string
+          example: R2 
+        positionId:
+          type: string
+          example: P0
+        createdAt:
+          type: string
+          example: 2024-06-21T09:28:47.000Z 
+        updateAt:
+          type: string
+          example: 2024-06-21T09:28:47.000Z
+        Markdown:
+          type: object
+          properties:
+            description:
+              type: string
+              example: "Test"
+            contentHTML:
+              type: string
+              example: "<p>****Content ****</p>\n<p><em><strong>dsaada</strong></em></p>\n"
+            contentMarkdown:
+              type: string
+              example: "****Content ****\n\n***dsaada***"
+        positionData:
+          type: object
+          properties:
+            valueEn:
+              type: string
+              example: "None"
+            valueVi:
+              type: string
+              example: "Bác sĩ"
+        Doctor_Info:
+          type: object
+          properties:
+            specialtyId:
+              type: number
+              example: 3
+            clinicId:
+              type: number
+              example: 2
+            priceId:
+              type: string
+              example: "PRI2"
+            paymentId:
+              type: string
+              example: "PAY2"
+            provinceId:
+              type: string
+              example: "PRO2"
+            addressClinic:
+              type: string
+              example: "HCM"
+            nameClinic:
+              type: string
+              example: "dsada"
+            note:
+              type: string
+              example: "gggg"
+            count:
+              type: number
+              example: 0
+            createdAt:
+              type: string
+              example: 2024-06-21T09:28:47.000Z 
+            updateAt:
+              type: string
+              example: 2024-06-21T09:28:47.000Z
+        provinceTypeData:
+          type: object
+          properties:
+            valueEn:
+              type: string
+              example: "Ho Chi Minh"
+            valueVi:
+              type: string
+              example: "Hồ Chí Minh"
+        paymentTypeData:
+          type: object
+          properties:
+            valueEn:
+              type: string
+              example: "Credit card"
+            valueVi:
+              type: string
+              example: "Thẻ ATM"
+
+            
+    ScheduleDoctorByDate:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 38
+        currentNumber:
+          type: number
+          example: null
+        maxNumber:
+          type: number
+          example: 10
+        date:
+          type: number
+          example: 1721926800000
+        timeType:
+          type: string  
+          example: T1
+        doctorId:
+          type: number
+          example: 35
+        createdAt:
+          type: string
+          example: 2024-06-21T09:36:388.000Z
+        updateAt:
+          type: string
+          example: 2024-06-21T09:36:388.000Z
+        timeTypeData:
+          type: object
+          properties:
+            valueEn:
+              type: string
+              example: "8:00 AM - 9:00 AM"
+            valueVi:
+              type: string
+              example: "8:00 - 9:00"
+        doctorData:
+          type: object
+          properties:
+            firstName:
+              type: string
+              example: "Dung"
+            lastName:
+              type: string
+              example: "Le"
+       
+    ExtraDoctorById:
+      type: object
+      properties:
+        specialtyId:
+          type: integer
+          example: 2
+        clinicId:
+          type: number
+          example: 0
+        priceId:
+          type: string
+          example: PRI1
+        provinceId:
+          type: string
+          example: PRO2
+        paymentId:
+          type: string  
+          example: PAY1
+        addressClinic:
+          type: string
+          example: HCM
+        nameClinic:
+          type: string
+          example: Da khoa
+        note:
+          type: string
+          example: Tri dau bung
+        count:
+          type: number
+          example: 0
+        createdAt:
+          type: string
+          example: 2024-06-21T09:36:388.000Z
+        updateAt:
+          type: string
+          example: 2024-06-21T09:36:388.000Z
+        priceTypeData:
+          type: object
+          properties:
+            valueEn:
+              type: number
+              example: 10
+            valueVi:
+              type: number
+              example: 200000
+        provinceTypeData:
+          type: object
+          properties:
+            valueEn:
+              type: string
+              example: "Ho Chi Minh"
+            valueVi:
+              type: string
+              example: "Hồ Chí Minh"
+        paymentTypeData:
+          type: object
+          properties:
+            valueEn:
+              type: string
+              example: "Cash"
+            valueVi:
+              type: string
+              example: "Tiền mặt"

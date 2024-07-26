@@ -27,7 +27,10 @@
     "nodemailer": "6.6.3",
     "react-loading-overlay": "1.0.1",
     "sequelize": "^6.6.2",
-    "uuid": "8.3.2"
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1",
+    "uuid": "8.3.2",
+    "yaml": "^2.5.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.10",

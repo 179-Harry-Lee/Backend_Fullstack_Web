@@ -68,6 +68,7 @@ let initWebRoutes = (app) => {
     patientController.postVerifyBookAppointment
   );
 
+  //Specialty
   router.post(
     "/api/create-new-specialty",
     specialtyController.createNewSpecialty
@@ -79,7 +80,7 @@ let initWebRoutes = (app) => {
     "/api/get-detail-specialty-by-id",
     specialtyController.getDetailSpecialtyById
   );
-  //
+  //Clinic
   router.post("/api/create-new-clinic", clinicController.createNewClinic);
 
   router.get("/api/get-all-clinic", clinicController.getAllClinic);
