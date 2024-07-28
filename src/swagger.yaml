@@ -6,6 +6,8 @@ info:
     - Link Github:
     - [Front-end](https://github.com/179-Harry-Lee/Frontend_Fullstack_Web.git)
     - [Back-end]( https://github.com/179-Harry-Lee/Backend_Fullstack_Web.git)
+
+    - Dưới đây liệt kê một số API dùng trong dự án. Có một số ít API có dữ kiện đặt biệt mới có thể test sẽ không được liệt kê ở đây.
   termsOfService: http://swagger.io/terms/
   contact:
     email: apiteam@swagger.io
@@ -24,6 +26,15 @@ tags:
   
   - name: doctor
     description: Các API liên quan đến doctor
+  
+  - name: patient
+    description: Các API liên quan đến bệnh nhân
+
+  - name: specialty
+    description: Các API liên quan đến bệnh nhân
+  
+  - name: clinic
+    description: Các API liên quan đến Cơ sở y tế
 
 
 paths:
@@ -516,6 +527,203 @@ paths:
             - write:pets
             - read:pets
 
+  /api/patient-book-appointment:
+     post:
+      tags:
+        - patient
+      summary: Bệnh nhân điền thông tin đặt lịch khám cho bác sĩ
+      description: Bệnh nhân điền thông tin đặt lịch khám cho bác sĩ
+      operationId: create
+      requestBody:
+        description: trường Date tính từ thời gian hiện tại test tới tương lai( đổi sang kiểu Unix trước khi truyền vào)
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/Booking" 
+        required: true
+      responses:
+        '200':
+          description: Đặt lịch thành công và sẽ nhận được 1 thư tới email mà bạn đã nhập
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errCode: 
+                    type: integer
+                    example: 0
+                  message: 
+                    type: string
+                    example: Save infor doctor success
+        
+        '500':
+          description: Missing inputs parameter
+      security:
+        - petstore_auth:
+            - write:pets
+            - read:pets
+
+  /api/get-all-specialty:
+    get:
+      tags:
+        - specialty
+      summary: Lấy danh sách tất cả chuyên khoa
+      description: Lấy tất cả chuyên khoa
+      operationId: get-all-specialty
+      
+      responses:
+        '200':
+          description: Xuất danh sách user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errCode: 
+                    type: integer
+                    example: 0
+                  message: 
+                    type: string
+                    example: OK
+                  user:
+                    type: array
+                    items:
+                    $ref: "#/components/schemas/GetAllSpecialty"
+                    
+                      
+
+        '500':
+          description: Missing inputs parameter
+      security:
+        - petstore_auth:
+            - write:pets
+            - read:pets
+
+  /api/get-detail-specialty-by-id:
+    get:
+      tags:
+        - specialty
+      summary: Lấy danh sách chuyên khoa theo tỉnh thành
+      description: Lấy tất cả bác sĩ thuộc 1 chuyên khoa theo 1 tỉnh thành cụ thể
+      operationId: get-detail-specialty-by-id
+      parameters:
+        - name: id
+          in: query
+          description: truyền vào id của chuyên khoa
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: 15
+        - name: location
+          in: query
+          description: truyền location là ALL để lấy tất cả bác sĩ ở các tình thành thuộc 1 chuyên khoa hoặc location cụ thể để lấy bác sĩ ở tỉnh thành cụ thể cụ thể 1 chuyên khoa
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: ALL
+      responses:
+        '200':
+          description: Xuất danh sách bác sĩ theo chuyên khoa
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errCode: 
+                    type: integer
+                    example: 0
+                  message: 
+                    type: string
+                    example: OK
+                  user:
+                    type: array
+                    items:
+                    $ref: "#/components/schemas/specialtybyid"
+
+
+  /api/get-all-clinic:
+     get:
+      tags:
+        - clinic
+      summary: Lấy danh sách tất cả cơ sở y tế hiện có
+      description: Lấy tất cả cơ sở y tế hiện có
+      operationId: get-all-clinic
+      
+      responses:
+        '200':
+          description: Xuất danh sách clinic
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errCode: 
+                    type: integer
+                    example: 0
+                  message: 
+                    type: string
+                    example: OK
+                  user:
+                    type: array
+                    items:
+                    $ref: "#/components/schemas/getAllClinic"
+                    
+                      
+
+        '500':
+          description: Missing inputs parameter
+      security:
+        - petstore_auth:
+            - write:pets
+            - read:pets
+
+  /api/get-detail-clinic-by-id:
+    get:
+      tags:
+        - clinic
+      summary: Lấy 1 cơ sở y tế cố định
+      description: Lấy 1 cơ sở y tế cố định
+      operationId: get-detail-clinic-by-id
+      parameters:
+        - name: id
+          in: query
+          description: truyền id là  Id cụ thể để lấy cơ sở y tế cụ thể cụ thể
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: 8
+      responses:
+        '200':
+          description: Xuất cơ sở y tế tìm được qua id
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errCode: 
+                    type: integer
+                    example: 0
+                  message: 
+                    type: string
+                    example: OK
+                  user:
+                    type: array
+                    items:
+                    $ref: "#/components/schemas/GetDetailClinic"
+                    
+                      
+
+        '500':
+          description: Missing inputs parameter
+      security:
+        - petstore_auth:
+            - write:pets
+            - read:pets
+
+
 components:
   schemas:
     LoginBody:
@@ -985,3 +1193,130 @@ components:
             valueVi:
               type: string
               example: "Tiền mặt"
+
+    Booking:
+      type: object
+      properties:
+        email:
+          type: string
+          example: ducdung17903333@gmail.com
+        doctorId:
+          type: number
+          example: 5
+        date:
+          type: number
+          example: 1722013200000
+        timeType:
+          type: string
+          example: T1
+        fullName:
+          type: string
+          example: Le Dung
+        selectedGender:
+          type: string
+          example: F
+        address:
+          type: string
+          example: HCM
+        
+    GetAllSpecialty:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 15
+        name:
+          type: string
+          example: Cơ xương khớp
+        descriptionMarkdown:
+          type: string
+          example: "\n\n# ## **Cơ Xương Khớp**\n\n\n\n## Bác sĩ Cơ Xương Khớp giỏi\n\nDanh sách các bác sĩ uy tín đầu ngành Cơ Xương Khớp tại Việt Nam:\n\n- Các chuyên gia có quá trình đào tạo bài bản, nhiều kinh nghiệm\n- Các giáo sư, phó giáo sư đang trực tiếp nghiên cứu và giảng dạy tại Đại học Y khoa Hà Nội\n- Các bác sĩ đã, đang công tác tại các bệnh viện hàng đầu Khoa Cơ Xương Khớp - Bệnh viện Bạch Mai, Bệnh viện Hữu nghị Việt Đức,Bệnh Viện E.\n- Là thành viên hoặc lãnh đạo các tổ chức chuyên môn như: Hiệp hội Cơ Xương Khớp, Hội Thấp khớp học,...\n- Được nhà nước công nhận các danh hiệu Thầy thuốc Nhân dân, Thầy thuốc Ưu tú, Bác sĩ Cao cấp,...\n## Bệnh Cơ Xương Khớp\n\n- Gout\n- Thoái hóa khớp: khớp gối, cột sống thắt lưng, cột sống cổ\n- Viêm khớp dạng thấp, Viêm đa khớp, Viêm gân\n- Tràn dịch khớp gối, Tràn dịch khớp háng, Tràn dịch khớp khủy, Tràn dịch khớp vai\n- Loãng xương, đau nhức xương\n\n..."
+        descriptionHTML:
+          type: string
+          example: "<h1>## <strong>Cơ Xương Khớp</strong></h1>\n<h2>Bác sĩ Cơ Xương Khớp giỏi</h2>\n<p>Danh sách các bác sĩ uy tín đầu ngành Cơ Xương Khớp tại Việt Nam:</p>\n<ul>\n<li>Các chuyên gia có quá trình đào tạo bài bản, nhiều kinh nghiệm</li>\n<li>Các giáo sư, phó giáo sư đang trực tiếp nghiên cứu và giảng dạy tại Đại học Y khoa Hà Nội</li>\n<li>Các bác sĩ đã, đang công tác tại các bệnh viện hàng đầu Khoa Cơ Xương Khớp - Bệnh viện Bạch Mai, Bệnh viện Hữu nghị Việt Đức,Bệnh Viện E.</li>\n<li>Là thành viên hoặc lãnh đạo các tổ chức chuyên môn như: Hiệp hội Cơ Xương Khớp, Hội Thấp khớp học,...</li>\n<li>Được nhà nước công nhận các danh hiệu Thầy thuốc Nhân dân, Thầy thuốc Ưu tú, Bác sĩ Cao cấp,...</li>\n</ul>\n<h2>Bệnh Cơ Xương Khớp</h2>\n<ul>\n<li>Gout</li>\n<li>Thoái hóa khớp: khớp gối, cột sống thắt lưng, cột sống cổ</li>\n<li>Viêm khớp dạng thấp, Viêm đa khớp, Viêm gân</li>\n<li>Tràn dịch khớp gối, Tràn dịch khớp háng, Tràn dịch khớp khủy, Tràn dịch khớp vai</li>\n<li>Loãng xương, đau nhức xương</li>\n</ul>\n<p>...</p>\n"
+        createdAt:
+          type: string
+          example: 2024-06-21T09:36:388.000Z
+        updateAt:
+          type: string
+          example: 2024-06-21T09:36:388.000Z
+
+    specialtybyid:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 15
+        name:
+          type: string
+          example: Cơ xương khớp
+        descriptionMarkdown:
+          type: string
+          example: "\n\n# ## **Cơ Xương Khớp**\n\n\n\n## Bác sĩ Cơ Xương Khớp giỏi\n\nDanh sách các bác sĩ uy tín đầu ngành Cơ Xương Khớp tại Việt Nam:\n\n- Các chuyên gia có quá trình đào tạo bài bản, nhiều kinh nghiệm\n- Các giáo sư, phó giáo sư đang trực tiếp nghiên cứu và giảng dạy tại Đại học Y khoa Hà Nội\n- Các bác sĩ đã, đang công tác tại các bệnh viện hàng đầu Khoa Cơ Xương Khớp - Bệnh viện Bạch Mai, Bệnh viện Hữu nghị Việt Đức,Bệnh Viện E.\n- Là thành viên hoặc lãnh đạo các tổ chức chuyên môn như: Hiệp hội Cơ Xương Khớp, Hội Thấp khớp học,...\n- Được nhà nước công nhận các danh hiệu Thầy thuốc Nhân dân, Thầy thuốc Ưu tú, Bác sĩ Cao cấp,...\n## Bệnh Cơ Xương Khớp\n\n- Gout\n- Thoái hóa khớp: khớp gối, cột sống thắt lưng, cột sống cổ\n- Viêm khớp dạng thấp, Viêm đa khớp, Viêm gân\n- Tràn dịch khớp gối, Tràn dịch khớp háng, Tràn dịch khớp khủy, Tràn dịch khớp vai\n- Loãng xương, đau nhức xương\n\n..."
+        descriptionHTML:
+          type: string
+          example: "<h1>## <strong>Cơ Xương Khớp</strong></h1>\n<h2>Bác sĩ Cơ Xương Khớp giỏi</h2>\n<p>Danh sách các bác sĩ uy tín đầu ngành Cơ Xương Khớp tại Việt Nam:</p>\n<ul>\n<li>Các chuyên gia có quá trình đào tạo bài bản, nhiều kinh nghiệm</li>\n<li>Các giáo sư, phó giáo sư đang trực tiếp nghiên cứu và giảng dạy tại Đại học Y khoa Hà Nội</li>\n<li>Các bác sĩ đã, đang công tác tại các bệnh viện hàng đầu Khoa Cơ Xương Khớp - Bệnh viện Bạch Mai, Bệnh viện Hữu nghị Việt Đức,Bệnh Viện E.</li>\n<li>Là thành viên hoặc lãnh đạo các tổ chức chuyên môn như: Hiệp hội Cơ Xương Khớp, Hội Thấp khớp học,...</li>\n<li>Được nhà nước công nhận các danh hiệu Thầy thuốc Nhân dân, Thầy thuốc Ưu tú, Bác sĩ Cao cấp,...</li>\n</ul>\n<h2>Bệnh Cơ Xương Khớp</h2>\n<ul>\n<li>Gout</li>\n<li>Thoái hóa khớp: khớp gối, cột sống thắt lưng, cột sống cổ</li>\n<li>Viêm khớp dạng thấp, Viêm đa khớp, Viêm gân</li>\n<li>Tràn dịch khớp gối, Tràn dịch khớp háng, Tràn dịch khớp khủy, Tràn dịch khớp vai</li>\n<li>Loãng xương, đau nhức xương</li>\n</ul>\n<p>...</p>\n"
+        
+        doctorSpecialty:
+          type: object
+          properties:
+            doctorId:
+              type: number
+              example: 67
+            provinceId:
+              type: string
+              example: "PRO2"
+
+
+
+    getAllClinic:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 13
+        name:
+          type: string
+          example: Doctor Check - Tầm Soát Bệnh Để Sống Thọ Hơn
+        address:
+          type: string
+          example: Hồ Chí Minh
+        descriptionMarkdown:
+          type: string
+          example: "Hãy đặt khám với Doctor Check - Tầm Soát Bệnh Để Sống Thọ Hơn trên Nền tảng Y tế Chăm sóc sức khỏe toàn diện BookingCare:\n\nĐược khám với các bác sĩ chuyên khoa giàu kinh nghiệm, dịch vụ y tế chất lượng\nĐặt hẹn trực tuyến & nhận hướng dẫn chi tiết trước khi đi khám (miễn phí)\nGiảm thiểu thời gian chờ đợi"
+        descriptionHTML:
+          type: string
+          example: "<p>Hãy đặt khám với Doctor Check - Tầm Soát Bệnh Để Sống Thọ Hơn trên Nền tảng Y tế Chăm sóc sức khỏe toàn diện BookingCare:</p>\n<p>Được khám với các bác sĩ chuyên khoa giàu kinh nghiệm, dịch vụ y tế chất lượng\nĐặt hẹn trực tuyến &amp; nhận hướng dẫn chi tiết trước khi đi khám (miễn phí)\nGiảm thiểu thời gian chờ đợi</p>\n"
+        image:
+          type: string
+          example: "data:image/jpeg;base64"
+        createdAt:
+          type: string
+          example: 2024-06-21T09:36:388.000Z
+        updateAt:
+          type: string
+          example: 2024-06-21T09:36:388.000Z
+
+
+    GetDetailClinic:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "Bệnh viện Chợ Rẫy"
+        descriptionMarkdown:
+          type: string
+          example: "- Hàng nghìn người bệnh đến khám tại Bệnh viện Chợ Rẫy mỗi ngày. Nhằm nâng cao chất lượng dịch vụ và hỗ trợ người bệnh tốt hơn, Bệnh viện Chợ Rẫy triển khai đặt khám online thông qua Nền tảng Đặt khám BookingCare. \n\nĐể giảm thời gian chờ đợi và nhận được hướng dẫn đi khám tại Bệnh viện Chợ Rẫy, người bệnh vui lòng:\n\n- Chọn chuyên khoa phù hợp cần đi khám\n- Chọn thời gian đặt khám\n- Đặt hẹn online trước khi đến khám. "
+        descriptionHTML:
+          type: string
+          example: "<ul>\n<li>Hàng nghìn người bệnh đến khám tại Bệnh viện Chợ Rẫy mỗi ngày. Nhằm nâng cao chất lượng dịch vụ và hỗ trợ người bệnh tốt hơn, Bệnh viện Chợ Rẫy triển khai đặt khám online thông qua Nền tảng Đặt khám BookingCare.</li>\n</ul>\n<p>Để giảm thời gian chờ đợi và nhận được hướng dẫn đi khám tại Bệnh viện Chợ Rẫy, người bệnh vui lòng:</p>\n<ul>\n<li>Chọn chuyên khoa phù hợp cần đi khám</li>\n<li>Chọn thời gian đặt khám</li>\n<li>Đặt hẹn online trước khi đến khám.</li>\n</ul>\n"
+        
+        doctorClinic:
+          type: object
+          properties:
+            doctorId:
+              type: number
+              example: 67
+            provinceId:
+              type: string
+              example: "PRO2"
