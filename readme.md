@@ -2,6 +2,10 @@
 
 ### Đây là phần hướng dẫn cài đặt phía back-end thực hiện bằng nodeJS(expressJS).
 
+- Các bạn git clone hoặc tải trực tiếp project về máy
+
+- Sau đó gỏ chạy lên npm install để tải các package cần thiết của project
+
 - Ở file .env.example sẽ lưu trữ các biến môi trường
 
 ![alt text](image.png)
@@ -59,3 +63,6 @@ Khi gỏ xong DB của bạn đã có các bảng cần thiết để sử dụn
 > /api/create-new-user (đăng ký): Các bạn cứ ấn vào Try it out, mình đã điền sẳn một tài khoản admin mẫu có các bạn rồi, chỉ việc ấn Execute thôi.
 
 > Các trường như roleId, positionId, gender, các bạn muốn biết dữ liệu mình ghi dưới dạng keymap là gì thì mở lại DB allcode xem nha.
+
+- Tiếp theo cài đặt front-end
+- Link front-end: https://github.com/179-Harry-Lee/Frontend_Fullstack_Web.git
