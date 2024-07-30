@@ -741,27 +741,39 @@ components:
       properties:
         email:
           type: string
+          example: admin@gmail.com
           
         password:
           type: string
+          example: 123
           
         firstName:
           type: string
+          example: Dung
            
         lastName:
           type: string
+          example: Dep trai
 
         address:
           type: string
+          example: HCM
         
         phonenumber:
-          type: string
+          type: number
+          example: 0987654321
 
         gender:
-          type: integer
+          type: string
+          example: M
 
         roleId:
-          type: integer
+          type: string
+          example: R1
+        
+        positionId:
+          type: string
+          example: P4
 
 
     UserData:
